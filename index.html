@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>JSFemto</title>
+	<!-- Links to stylesheet for JSFemto -->
+	<link rel="stylesheet" type="text/css" href="main.css" />
+</head>
+
+<body>
+	<audio id="player" preload="none">
+		<source src="My Land.mp3" type="audio/mpeg" id="source" />
+	</audio>
+	<div class="playerBorder">
+		<div id="name">
+			<!-- This div contains the name of the song -->
+			JSFemto
+		</div>
+		<br>
+		<!-- These are the main controls of the player -->
+		<button id="playPauseButton" class="big button">Play</button>
+		<button id="stopButton" class="med button">Stop</button>
+		<!-- Ranges: sliders -->
+		<input type="range" class="small range" min="0.0" max="1.0" value="1.0" step="0.05" id="volSlider"  />
+		<br>
+		<input type="range" class="wide range" min="0.0" max="1.0" value="0" step="0.01" id="songProgress" />
+		<br>
+		<input type="text" id="songName" /> <button id="songSubmit">Submit</button>
+		<br> <br>
+	</div>
+	<script>
+
+		document.getElementById('songSubmit').addEventListener('click', function() {
+			var songName = document.getElementById('songName').value;
+			console.log(songName);
+			document.getElementById('source').setAttribute('src', songName);
+			femtoPlayer.main()
+		});
+
+		// Set variable femtoPlayer to itself, if it already exists. Otherwise, set it to nothing.
+		var femtoPlayer = femtoPlayer || {};
+
+		femtoPlayer.main = function() {
+
+			console.log('Welcome to JSFemto, the lightweight music player by ByteUp! Software, now ported to JavaScript!')
+
+			//Sets main variables
+			var player = document.getElementById('player'), 
+				songProgress = document.getElementById('songProgress'),
+				name = document.getElementById('source').getAttribute('src'),
+				playing = false,
+				duration,
+				mousedown;
+
+			//Wait until audio is loaded, then get length of audio
+			console.log('Loading audio...');
+			player.addEventListener('loadedmetadata', function() {
+				duration = this.duration;
+				console.log('Song duration is:', duration);
+			});
+
+			//Displays name of audio
+			console.log('JSFemto has loaded:', name);
+			document.getElementById('name').innerHTML = name;
+
+
+			//Moves range input with progress of audio
+			player.addEventListener('timeupdate', function() {
+				var currentTime = this.currentTime / duration;
+				if (this.currentTime == duration){
+					this.currentTime = 0;
+					player.pause();
+					console.log('Song finished. Gone back to start.');
+					playing = false;
+					document.getElementById('playPauseButton').innerHTML = 'Play';
+				};
+				if (!mousedown){
+					songProgress.value = currentTime;
+				};
+			});
+
+			//Listens for click on the Play / Pause button, plays / pauses
+			document.getElementById('playPauseButton').addEventListener('click', function() {
+				if (!playing) {
+					player.play();
+					console.log('Playing...');
+					playing = true;
+					document.getElementById('playPauseButton').innerHTML = 'Pause';
+				}
+				else {
+					player.pause();
+					console.log('Paused...');
+					playing = false;
+					document.getElementById('playPauseButton').innerHTML = 'Play';
+				}
+
+			});
+
+			//Listens for click on the stop button, stops audio
+			document.getElementById('stopButton').addEventListener('click', function() {
+				console.log('Stop button clicked');
+				player.pause();
+				player.currentTime = 0;
+				playing = false;
+				document.getElementById('playPauseButton').innerHTML = 'Play';
+			});
+
+
+			//Waits for input on volume range, changes volume
+			document.getElementById('volSlider').addEventListener('input', function() {
+				console.log('Volume changed');
+				player.volume = this.value;
+			});
+
+			//Listens for mouse up / down. Used to stop progress bar jumping when being dragged.
+			songProgress.addEventListener('mousedown', function(){
+				mousedown = true;
+			});
+			songProgress.addEventListener('mouseup', function(){
+				mousedown = false;
+			});
+
+			//Listens for dragging of progress bar, puts audio at that position
+			songProgress.addEventListener('change', function() {
+				console.log('Song position changed');
+				var position = this.value * duration;
+				player.currentTime = position;
+			});
+		};
+
+	</script>
+
+</body>
+</html>

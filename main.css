@@ -1,0 +1,43 @@
+body {
+	/* Sets font on body to Courier New, if not available, use a font from the Monospace family */
+	font-family:'Courier New', monospace;
+	/* Sets font size to 22px */
+	font-size: 22px;
+}
+
+.button {
+	/* Sets font on buttons to Courier New, if not, Monospace */
+	font-family:'Courier New', monospace;
+}
+
+.button.big {
+	/* Sets the width and height of the button class: "big button" */
+	width: 100px; height: 40px;
+}
+
+.button.med {
+	/* Sets the width and height of the button class: "med button" */
+	width: 60px; height: 40px;
+}
+
+.range {
+
+}
+
+.range.wide {
+	/* Sets the size of the range class: "wide range" */
+	width: 250px;
+}
+
+.range.small {
+	/* Sets the size of the range class: "wide range" */
+	width: 40px;
+}
+
+.playerBorder {
+	/* Gives anything with the class: "playerBorder" two solid black squares round it */
+	border: 6px double #000;
+	width: 265px;
+}
+
+/* Stylesheet intended for JSFemto music player, written by Barney S.C Watson */
